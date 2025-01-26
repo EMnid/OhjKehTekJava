@@ -37,7 +37,7 @@ public class Birthday {
                                                 System.out.println("That's a nice round number.");
                                         }
                                 } else if (daysOld == 0) {
-                                        System.out.println("Today is your birthday!");
+                                        System.out.println("Today is your very first birthday, welcome to the world!");
                                 } else {
                                         System.out.println("Woah! You're from the future!");
                                 }
