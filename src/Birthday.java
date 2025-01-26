@@ -1,35 +1,51 @@
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
+import java.util.TimeZone;
 
 public class Birthday {
 
         public static void main(String[] args) {
-                // Hanki nykyinen aikavyöhyke ja aika
-                ZoneId zoneId = ZoneId.systemDefault();
-                OffsetDateTime now = OffsetDateTime.now(zoneId);
-                DateTimeFormatter formatter = DateTimeFormatter.RFC_1123_DATE_TIME;
-                String dateNow = now.format(formatter);
-                System.out.println(dateNow);
-                System.out.println("Aseta ympäristömuuttujaan BIRTHDATE syntymäpäiväsi muodossa YYYY-MM-DD");
+                // Instruct the user to set their birthday in the environment variable
+                System.out.println("Set the environment variable BIRTHDATE as your birthday in format YYYY-MM-DD");
 
-                // Lue ympäristömuuttuja
+                // Read the environment variable
                 String birthdateStr = System.getenv("BIRTHDATE");
 
-                System.out.println("Ympäristömuuttujan BIRTHDATE arvo: " + birthdateStr);
+                System.out.println("Environment variable BIRTHDATE value: " + birthdateStr);
 
                 if (birthdateStr != null) {
                         try {
-                                // Muunna OffsetDateTime-olioksi lisäämällä oletusaika ja aikavyöhyke
-                                DateTimeFormatter birthdateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
-                                OffsetDateTime birthdate = OffsetDateTime.parse(birthdateStr + "T00:00:00" + now.getOffset().toString(), birthdateFormatter);
-                                System.out.println("Syntymäpäivä: " + birthdate);
+                                // Convert to OffsetDateTime
+                                OffsetDateTime birthdate = OffsetDateTime.parse(birthdateStr + "T00:00:00+00:00", DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+
+                                // Get the current date with timezone
+                                TimeZone tz = TimeZone.getDefault();
+                                OffsetDateTime today = OffsetDateTime.now(tz.toZoneId());
+
+                                // Check if today is the user's birthday
+                                if (today.toLocalDate().equals(birthdate.toLocalDate())) {
+                                        System.out.println("Happy Birthday!");
+                                }
+
+                                // Calculate age in days
+                                long daysOld = ChronoUnit.DAYS.between(birthdate.toLocalDate(), today.toLocalDate());
+                                if (daysOld > 0) {
+                                        System.out.println("You are " + daysOld + " days old.");
+                                        if (daysOld % 1000 == 0) {
+                                                System.out.println("That's a nice round number.");
+                                        }
+                                } else if (daysOld == 0) {
+                                        System.out.println("Today is your birthday!");
+                                } else {
+                                        System.out.println("Woah! You're from the future!");
+                                }
                         } catch (DateTimeParseException e) {
-                                System.out.println("Virhe päivämäärän jäsentämisessä: " + e.getMessage());
+                                System.out.println("Error in parsing the date: " + e.getMessage());
                         }
                 } else {
-                        System.out.println("Ympäristömuuttujaa BIRTHDATE ei ole asetettu.");
+                        System.out.println("Environment variable BIRTHDATE is not set or is set incorrectly.");
                 }
         }
 }
