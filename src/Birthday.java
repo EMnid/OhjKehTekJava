@@ -24,8 +24,8 @@ public class Birthday {
                                 TimeZone tz = TimeZone.getDefault();
                                 OffsetDateTime today = OffsetDateTime.now(tz.toZoneId());
 
-                                // Check if today is the user's birthday
-                                if (today.toLocalDate().equals(birthdate.toLocalDate())) {
+                                // Check if today is the user's birthday (month and day match)
+                                if (today.getMonth() == birthdate.getMonth() && today.getDayOfMonth() == birthdate.getDayOfMonth()) {
                                         System.out.println("Happy Birthday!");
                                 }
 
