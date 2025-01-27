@@ -7,29 +7,23 @@ import java.util.TimeZone;
 public class Birthday {
 
         public static void main(String[] args) {
-                // Instruct the user to set their birthday in the environment variable
                 System.out.println("Set the environment variable BIRTHDATE as your birthday in format YYYY-MM-DD");
 
-                // Read the environment variable
                 String birthdateStr = System.getenv("BIRTHDATE");
 
                 System.out.println("Environment variable BIRTHDATE value: " + birthdateStr);
 
                 if (birthdateStr != null) {
                         try {
-                                // Convert to OffsetDateTime
                                 OffsetDateTime birthdate = OffsetDateTime.parse(birthdateStr + "T00:00:00+00:00", DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 
-                                // Get the current date with timezone
                                 TimeZone tz = TimeZone.getDefault();
                                 OffsetDateTime today = OffsetDateTime.now(tz.toZoneId());
 
-                                // Check if today is the user's birthday (month and day match)
                                 if (today.getMonth() == birthdate.getMonth() && today.getDayOfMonth() == birthdate.getDayOfMonth()) {
                                         System.out.println("Happy Birthday!");
                                 }
 
-                                // Calculate age in days
                                 long daysOld = ChronoUnit.DAYS.between(birthdate.toLocalDate(), today.toLocalDate());
                                 if (daysOld > 0) {
                                         System.out.println("You are " + daysOld + " days old.");
