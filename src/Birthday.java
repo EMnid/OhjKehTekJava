@@ -36,10 +36,10 @@ public class Birthday {
                                         System.out.println("Woah! You're from the future!");
                                 }
                         } catch (DateTimeParseException e) {
-                                System.out.println("Error in parsing the date: " + e.getMessage());
+                                System.err.println("Error in parsing the date: " + e.getMessage());
                         }
                 } else {
-                        System.out.println("Environment variable BIRTHDATE is not set or is set incorrectly.");
+                        System.err.println("Environment variable BIRTHDATE is not set or is set incorrectly.");
                 }
         }
 }
