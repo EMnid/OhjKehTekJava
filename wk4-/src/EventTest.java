@@ -1,41 +1,51 @@
 import java.time.LocalDate;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class EventTest {
     public static void main(String[] args) {
-        Event beforeTodayEvent = new Event(
+        Category category = new Category("politics", "eu");
+
+        Event sweden = new Event(
+                LocalDate.of(1995, 1, 1),
+                "Sweden joins the European Union",
+                category);
+        Event finland = new Event(
                 LocalDate.of(1995, 1, 1),
                 "Finland joins the European Union",
-                new Category("politics", "eu"));
+                category);
+        Event denmark = new Event(
+                LocalDate.of(1974, 1, 1),
+                "Denmark joins the European Union",
+                category);
+        Event france = new Event(
+                LocalDate.of(1958, 1, 1),
+                "France joins the European Union",
+                category);
 
-        Event afterTodayEvent = new Event(
-                LocalDate.of(2038, 1, 19),
-                "Unix epoch clock (32-bit) rolls over",
-                new Category("computing", "unix"));
+        Event finlandDuplicated = new Event(
+                LocalDate.of(1995, 1, 1),
+                "Finland joins the European Union",
+                new Category("politics", "domestic"));
 
-        Event todayEvent = new Event(
-                LocalDate.now(),
-                "Whatever it is, it happens today",
-                new Category("test", "test"));
+        List<Event> events = new ArrayList<>();
+        events.add(sweden);
+        events.add(finland);
+        events.add(denmark);
+        events.add(france);
+        events.add(finlandDuplicated);
 
-        Event[] events = new Event[3];
-        events[0] = beforeTodayEvent;
-        events[1] = afterTodayEvent;
-        events[2] = todayEvent;
-
+        System.out.println("Unsorted events:");
         for (Event event : events) {
-            long days = event.getTodayDifference();
-            switch (event.getTodayRelation()) {
-                case TodayRelatable.Relation.BEFORE_TODAY:
-                    System.out.print(String.format("%d days ago", days));
-                    break;
-                case TodayRelatable.Relation.AFTER_TODAY:
-                    System.out.print(String.format("In %d days", days));
-                    break;
-                default:
-                    System.out.print("Today");
-                    break;
-            }
-            System.out.println(": " + event.getDescription());
+            System.out.println(event);
+        }
+
+        Collections.sort(events);
+
+        System.out.println("\nEvents sorted by date / description / category:");
+        for (Event event : events) {
+            System.out.println(event);
         }
     }
 }

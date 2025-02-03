@@ -1,11 +1,12 @@
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
+import java.util.Comparator;
 
 /**
  * Represents an event in history.
  */
-public class Event implements TodayRelatable {
+public class Event implements TodayRelatable, Comparable<Event> {
     private LocalDate date;
     private String description;
     private Category category;
@@ -100,8 +101,6 @@ public class Event implements TodayRelatable {
         return Objects.hash(this.date, this.description, this.category);
     }
 
-    /* ==== TodayRelatable interface implementation ==== */
-
     /**
      * Gets the relation of this event with today.
      *
@@ -133,5 +132,37 @@ public class Event implements TodayRelatable {
      */
     public long getTodayDifference() {
         return Math.abs(this.getDays());
+    }
+
+    /* ==== java.lang.Comparable implementation ==== */
+
+    /**
+     * Compares this event to another.
+     *
+     * @return negative, zero, or positive
+     * @see java.lang.Comparable
+     */
+    @Override
+    public int compareTo(Event other) {
+        int result = Objects.compare(
+                this.date,
+                other.date,
+                Comparator.naturalOrder());
+        if (result != 0) {
+            return result;
+        }
+
+        result = Objects.compare(
+                this.description,
+                other.description,
+                Comparator.naturalOrder());
+        if (result != 0) {
+            return result;
+        }
+
+        return Objects.compare(
+                this.category,
+                other.category,
+                Comparator.naturalOrder());
     }
 }
