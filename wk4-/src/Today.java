@@ -1,32 +1,65 @@
-import java.util.List;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class Today {
     private List<Event> events;
 
     public Today() {
         this.events = new ArrayList<>();
+        addEvents();
     }
 
     public static void main(String[] args) {
-        // Java trick: make an instance of the class
-        // that is hosting the static main() method:
-        Today app = new Today();
+        if (args.length != 2) {
+            System.err.println("Usage: java Today --mm-dd primary/secondary");
+            System.exit(1);
+        }
 
-        app.addEvents();
-        app.report();
+        LocalDate date;
+        try {
+            String dateString = args[0].substring(2); // Remove the leading "--"
+            date = LocalDate.parse(LocalDate.now().getYear() + "-" + dateString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        } catch (DateTimeParseException | StringIndexOutOfBoundsException e) {
+            System.err.println("Invalid date format. Use --mm-dd.");
+            System.exit(1);
+            return;
+        }
+
+        Category category;
+        try {
+            category = Category.parse(args[1]);
+        } catch (IllegalArgumentException e) {
+            System.err.println("Invalid category format. Use primary/secondary.");
+            System.exit(1);
+            return;
+        }
+
+        Today app = new Today();
+        app.report(date, category);
     }
 
-    private void report() {
-        LocalDate today = LocalDate.now();
-
+    private void report(LocalDate date, Category category) {
+        List<Event> filteredEvents = new ArrayList<>();
         for (Event event : this.events) {
-            if (isSameDate(today, event.getDate())) {
-                System.out.println(event);
+            if (isSameDate(date, event.getDate()) && event.getCategory().equals(category)) {
+                filteredEvents.add(event);
             }
         }
+
+        Collections.sort(filteredEvents, Collections.reverseOrder());
+
+        for (Event event : filteredEvents) {
+            System.out.println(event.getDate().getYear() + ": " + event.getDescription());
+        }
+    }
+
+    private boolean isSameDate(LocalDate someDate, LocalDate otherDate) {
+        return (someDate.getMonth() == otherDate.getMonth()
+                && (someDate.getDayOfMonth() == otherDate.getDayOfMonth()));
     }
 
     private void addEvents() {
@@ -109,18 +142,13 @@ public class Today {
         }
 
         // Add one test event with today's date,
-        // so that we can always get at least one 
+        // so that we can always get at least one
         // match in the report.
         this.events.add(
                 makeEvent(
                         LocalDate.now(),
                         "Test " + LocalDate.now().toString(),
                         new Category("test", "test")));
-    }
-
-    private boolean isSameDate(LocalDate someDate, LocalDate otherDate) {
-        return (someDate.getMonth() == otherDate.getMonth()
-                && (someDate.getDayOfMonth() == otherDate.getDayOfMonth()));
     }
 
     // Helper method to make an event from well-defined parts.
