@@ -1,3 +1,5 @@
+package wk1_2_3;
+
 public class PointTest {
     public static void main(String[] args) {
 

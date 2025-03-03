@@ -1,9 +1,11 @@
+package wk1_2_3;
+
 import java.time.LocalDate;
 import java.util.Arrays;
 
 public class MacOsEvents {
     public static void main(String[] args) {
-        // Using Category class (from the previous lessons), create a new category for Apple macOS
+        // Using wk1_2_3.Category class (from the previous lessons), create a new category for Apple macOS
         Category category = new Category("apple", "macos");
 
         // Initialize the events array (also from previous lesson examples), adding the release dates and descriptions of the last five macOS versions

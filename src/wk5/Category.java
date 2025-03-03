@@ -1,3 +1,5 @@
+package wk5;
+
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -15,34 +17,19 @@ public class Category implements Comparable<Category> {
      * @param secondary the secondary category
      */
     public Category(String primary, String secondary) {
-        this.primary = primary;
+        if (primary == null) {
+            throw new IllegalArgumentException("Primary category is null!");
+        }
+        this.primary = primary.toLowerCase();
+
         this.secondary = secondary;
+        if (secondary != null) {
+            this.secondary = secondary.toLowerCase();
+        }
     }
 
-    /**
-     * Parse a category string in the format "primary"
-     * or "primary/secondary" and make a category of them.
-     * Folds the category parts to lower case.
-     * Throws java.lang.IllegalArgumentException if the
-     * string is of the wrong format.
-     *
-     * @param categoryString the string to parse
-     * @return new category
-     */
-    public static Category parse(String categoryString) {
-        if (categoryString == null ||
-                categoryString.isEmpty() ||
-                categoryString.isBlank()) {
-            throw new IllegalArgumentException("invalid category string");
-        }
-
-        String[] categoryParts = categoryString.split("/");
-        String primary = categoryParts[0].toLowerCase();
-        String secondary = null;
-        if (categoryParts.length == 2) {
-            secondary = categoryParts[1].toLowerCase();
-        }
-        return new Category(primary, secondary);
+    public Category(String primary) {
+        this(primary, null);
     }
 
     /**
@@ -72,10 +59,12 @@ public class Category implements Comparable<Category> {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(this.primary);
+
         if (this.secondary != null) {
             sb.append("/");
             sb.append(this.secondary);
         }
+
         return sb.toString();
     }
 
@@ -127,5 +116,30 @@ public class Category implements Comparable<Category> {
                 this.secondary,
                 other.getSecondary(),
                 Comparator.naturalOrder());
+    }
+
+    /**
+     * Parse a category string in the format "primary"
+     * or "primary/secondary" and make a category of them.
+     * Folds the category parts to lower case.
+     * Throws java.lang.IllegalArgumentException if the
+     * string is of the wrong format.
+     *
+     * @param categoryString the string to parse
+     * @return new category
+     */
+    public static Category parse(String categoryString) {
+        if (categoryString == null ||
+                categoryString.isEmpty() ||
+                categoryString.isBlank()) {
+            throw new IllegalArgumentException("invalid category string");
+        }
+
+        String[] categoryParts = categoryString.split("/");
+        if (categoryParts.length > 1) {
+            return new Category(categoryParts[0], categoryParts[1]);
+        } else {
+            return new Category(categoryParts[0]);
+        }
     }
 }

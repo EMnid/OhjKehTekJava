@@ -1,3 +1,5 @@
+package wk1_2_3;
+
 public class Point {
     private double x;
     private double y;

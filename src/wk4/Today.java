@@ -1,3 +1,5 @@
+package wk4;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -15,7 +17,7 @@ public class Today {
 
     public static void main(String[] args) {
         if (args.length != 2) {
-            System.err.println("Usage: java Today --mm-dd primary/secondary");
+            System.err.println("Usage: java wk4.Today --mm-dd primary/secondary");
             System.exit(1);
         }
 

@@ -1,3 +1,5 @@
+package wk1_2_3;
+
 import java.util.Arrays;
 
 public class Main {
@@ -33,6 +35,6 @@ public class Main {
         System.out.println();
 
         // Show the sum:
-        System.out.println(String.format("Sum of arguments = %d", sum));
+        System.out.println(String.format("wk1_2_3.Sum of arguments = %d", sum));
     }
 }

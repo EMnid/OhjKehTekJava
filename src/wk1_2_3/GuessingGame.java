@@ -1,3 +1,5 @@
+package wk1_2_3;
+
 import java.util.Scanner;
 
 public class GuessingGame {

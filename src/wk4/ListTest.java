@@ -1,3 +1,5 @@
+package wk4;
+
 import java.util.List;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -94,11 +96,11 @@ public class ListTest {
         System.out.printf("%d events", allEvents.size());
         System.out.println();
 
-        // What happens if you try to add a Category
-        // to a List<Event>?
-        //     allEvents.add(new Category("oracle", "java"));
-        // "The method add(Event) in the type List<Event> 
-        // is not applicable for the arguments (Category)"
+        // What happens if you try to add a wk4.Category
+        // to a List<wk4.Event>?
+        //     allEvents.add(new wk4.Category("oracle", "java"));
+        // "The method add(wk4.Event) in the type List<wk4.Event>
+        // is not applicable for the arguments (wk4.Category)"
     }
 
     // Helper method to make an event from well-defined parts.

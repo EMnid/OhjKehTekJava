@@ -1,10 +1,14 @@
+package wk5;
+
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
+import java.util.Comparator;
 
 /**
  * Represents an event in history.
  */
-public class Event {
+public class Event implements TodayRelatable, Comparable<Event> {
     private LocalDate date;
     private String description;
     private Category category;
@@ -97,5 +101,70 @@ public class Event {
     @Override
     public int hashCode() {
         return Objects.hash(this.date, this.description, this.category);
+    }
+
+    /**
+     * Gets the relation of this event with today.
+     *
+     * @return the relation
+     * @see TodayRelatable.Relation
+     */
+    public Relation getTodayRelation() {
+        long days = getDays();
+        if (days > 0) {
+            return TodayRelatable.Relation.AFTER_TODAY;
+        } else if (days < 0) {  // end is before start
+            return TodayRelatable.Relation.BEFORE_TODAY;
+        } else {
+            return TodayRelatable.Relation.TODAY;
+        }
+    }
+
+    // Helper method to get days between now and this event.
+    private long getDays() {
+        return ChronoUnit.DAYS.between(LocalDate.now(), this.date);
+    }
+
+    /**
+     * Returns the difference between today and this event
+     * in days. The return value is always positive; use
+     * getRelation() to determine the relative position.
+     *
+     * @return number of days between today and this event
+     */
+    public long getTodayDifference() {
+        return Math.abs(this.getDays());
+    }
+
+    /* ==== java.lang.Comparable implementation ==== */
+
+    /**
+     * Compares this event to another.
+     *
+     * @return negative, zero, or positive
+     * @see java.lang.Comparable
+     */
+    @Override
+    public int compareTo(Event other) {
+        int result = Objects.compare(
+                this.date,
+                other.date,
+                Comparator.naturalOrder());
+        if (result != 0) {
+            return result;
+        }
+
+        result = Objects.compare(
+                this.description,
+                other.description,
+                Comparator.naturalOrder());
+        if (result != 0) {
+            return result;
+        }
+
+        return Objects.compare(
+                this.category,
+                other.category,
+                Comparator.naturalOrder());
     }
 }
