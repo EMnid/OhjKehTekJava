@@ -1,4 +1,4 @@
-package wk6;
+package tamk.ohsyte;
 
 import java.util.List;
 import java.time.MonthDay;

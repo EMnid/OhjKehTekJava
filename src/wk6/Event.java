@@ -1,4 +1,4 @@
-package tamk.ohsyte;
+package wk6;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;

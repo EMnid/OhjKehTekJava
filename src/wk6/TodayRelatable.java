@@ -1,4 +1,4 @@
-package tamk.ohsyte;
+package wk6;
 
 public interface TodayRelatable {
     public enum Relation {

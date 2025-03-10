@@ -1,5 +1,6 @@
-package wk6;
+package tamk.ohsyte;
 
+import java.time.MonthDay;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -42,6 +43,29 @@ public class EventManager {
         return true;
     }
 
+
+    public List<Event> getFilteredEvents(EventFilter filter) {
+        List<Event> filteredEvents = new ArrayList<>();
+        for (Event event : getAllEvents()) {
+            if (filter.accepts(event)) {
+                filteredEvents.add(event);
+            }
+        }
+        return filteredEvents;
+    }
+
+
+    public List<Event> getEventsOfDate(MonthDay monthDay) {
+        List<Event> events = new ArrayList<>();
+
+        for (EventProvider provider : this.eventProviders) {
+            events.addAll(provider.getEventsOfDate(monthDay));
+        }
+
+        return events;
+    }
+
+
     /**
      * Removes the specified event provider from the manager's list.
      *
@@ -82,7 +106,6 @@ public class EventManager {
      * @return the number of event providers
      */
     public int getEventProviderCount() {
-
         return this.eventProviders.size();
     }
 

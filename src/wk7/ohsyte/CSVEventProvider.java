@@ -1,4 +1,4 @@
-package wk6;
+package tamk.ohsyte;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
@@ -7,32 +7,26 @@ import com.opencsv.exceptions.CsvValidationException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.Month;
 import java.time.MonthDay;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Provides events stored in a CSV file. Uses the OpenCSV library.
  */
 public class CSVEventProvider implements EventProvider {
     private final List<Event> events;
-    private final String identifier;
 
     public CSVEventProvider(String fileName) {
         this.events = new ArrayList<>();
-        this.identifier = "CSV"; // You can change this to any identifier you prefer
 
         try {
             CSVReader reader = new CSVReaderBuilder(new FileReader(fileName)).build();
             String[] line;
             while ((line = reader.readNext()) != null) {
-                Event event = new Event(
-                        LocalDate.parse(line[0]),
-                        line[1],
-                        Category.parse(line[2]));
+                Event event = EventFactory.makeEvent(line[0], line[1], line[2]);
                 this.events.add(event);
             }
         } catch (FileNotFoundException fnfe) {
@@ -46,10 +40,20 @@ public class CSVEventProvider implements EventProvider {
         }
     }
 
+    //
+    // EventProvider interface implementation
+    //
+
+    /**
+     * Gets all events from this provider.
+     *
+     * @return list of all events
+     */
     @Override
     public List<Event> getEvents() {
         return this.events;
     }
+
     /**
      * Gets all events matching the specified category.
      *
@@ -58,7 +62,7 @@ public class CSVEventProvider implements EventProvider {
      */
     @Override
     public List<Event> getEventsOfCategory(Category category) {
-        List<Event> result = new ArrayList<>();
+        List<Event> result = new ArrayList<Event>();
         for (Event event : this.events) {
             if (event.getCategory().equals(category)) {
                 result.add(event);
@@ -66,6 +70,7 @@ public class CSVEventProvider implements EventProvider {
         }
         return result;
     }
+
     /**
      * Gets the events matching the given month-day combination.
      *
@@ -74,16 +79,32 @@ public class CSVEventProvider implements EventProvider {
      */
     @Override
     public List<Event> getEventsOfDate(MonthDay monthDay) {
-        List<Event> result = new ArrayList<>();
+        List<Event> result = new ArrayList<Event>();
+
         for (Event event : this.events) {
-            final Month eventMonth = event.getDate().getMonth();
-            final int eventDay = event.getDate().getDayOfMonth();
+            Month eventMonth;
+            int eventDay;
+            if (event instanceof SingularEvent) {
+                SingularEvent s = (SingularEvent) event;
+                eventMonth = s.getDate().getMonth();
+                eventDay = s.getDate().getDayOfMonth();
+            } else if (event instanceof AnnualEvent) {
+                AnnualEvent a = (AnnualEvent) event;
+                eventMonth = a.getMonthDay().getMonth();
+                eventDay = a.getMonthDay().getDayOfMonth();
+            } else {
+                throw new UnsupportedOperationException(
+                        "Operation not supported for " +
+                        event.getClass().getName());
+            }
             if (monthDay.getMonth() == eventMonth && monthDay.getDayOfMonth() == eventDay) {
                 result.add(event);
             }
         }
+
         return result;
     }
+
     /**
      * Gets the identifier of this event provider.
      *
@@ -91,6 +112,6 @@ public class CSVEventProvider implements EventProvider {
      */
     @Override
     public String getIdentifier() {
-        return this.identifier;
+        return "CSV";
     }
 }
